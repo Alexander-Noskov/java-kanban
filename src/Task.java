@@ -1,8 +1,10 @@
 import java.util.Objects;
 
 public class Task {
-    private final String name;
-    private final String description;
+    // В ТЗ нет условий по изменениям полей, однако на ревью было сказано, что name можно обновлять
+    // Предполагаю, что description тоже можно обновлять, поэтому добавил сеттеры на оба поля
+    private String name;
+    private String description;
     private Status status;
     private int id;
 
@@ -36,6 +38,14 @@ public class Task {
 
     public int getId() {
         return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setStatus(Status status) {
