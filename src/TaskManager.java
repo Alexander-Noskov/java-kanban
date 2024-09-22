@@ -18,8 +18,6 @@ public class TaskManager {
 
     // Получение списка всех задач
     public List<Task> getTasks() {
-        // Можно было бы создать List и в него добавить все значения циклом
-        // Однако этот способ мне показался более лаконичным
         return taskHashMap.values().stream().toList();
     }
 
@@ -113,13 +111,7 @@ public class TaskManager {
         for (int id : subtaskIds) {
             statuses.add(subtaskHashMap.get(id).getStatus());
         }
-        // Т.к. сет статусов может содержать либо статусы, либо ничего,
-        // то в данном случае через if-else проверяются все возможные варианты.
-        // В таком случае я не вижу смысла использовать преждевременный выход из цикла с помощью return
-        // Т.к. все равно выполнится только одно условие и остальные условия не будут проверяться
         if (statuses.isEmpty()) {
-            // Присваивание Status.NEW при isEmpty() нужно для того,
-            // чтобы статус вернулся на NEW при удалении всех подзадач эпика
             epicHashMap.get(epicId).setStatus(Status.NEW);
         } else if (statuses.contains(Status.IN_PROGRESS)) {
             epicHashMap.get(epicId).setStatus(Status.IN_PROGRESS);
