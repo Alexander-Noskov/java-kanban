@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class TaskManager {
@@ -16,18 +17,20 @@ public class TaskManager {
     }
 
     // Получение списка всех задач
-    public HashMap<Integer, Task> getTasks() {
-        return taskHashMap;
+    public List<Task> getTasks() {
+        // Можно было бы создать List и в него добавить все значения циклом
+        // Однако этот способ мне показался более лаконичным
+        return taskHashMap.values().stream().toList();
     }
 
     // Получение списка всех подзадач
-    public HashMap<Integer, Subtask> getSubtasks() {
-        return subtaskHashMap;
+    public List<Subtask> getSubtasks() {
+        return subtaskHashMap.values().stream().toList();
     }
 
     // Получение списка всех эпиков
-    public HashMap<Integer, Epic> getEpics() {
-        return epicHashMap;
+    public List<Epic> getEpics() {
+        return epicHashMap.values().stream().toList();
     }
 
     // Удаление всех задач
@@ -38,6 +41,9 @@ public class TaskManager {
     // Удаление всех подзадач
     public void deleteAllSubtasks() {
         subtaskHashMap.clear();
+        for (int id : epicHashMap.keySet()) {
+            epicHashMap.get(id).getSubtaskIds().clear();
+        }
     }
 
     // Удаление всех эпиков
@@ -107,14 +113,20 @@ public class TaskManager {
         for (int id : subtaskIds) {
             statuses.add(subtaskHashMap.get(id).getStatus());
         }
+        // Т.к. сет статусов может содержать либо статусы, либо ничего,
+        // то в данном случае через if-else проверяются все возможные варианты.
+        // В таком случае я не вижу смысла использовать преждевременный выход из цикла с помощью return
+        // Т.к. все равно выполнится только одно условие и остальные условия не будут проверяться
         if (statuses.isEmpty()) {
+            // Присваивание Status.NEW при isEmpty() нужно для того,
+            // чтобы статус вернулся на NEW при удалении всех подзадач эпика
             epicHashMap.get(epicId).setStatus(Status.NEW);
-        } else if (!statuses.contains(Status.DONE) && !statuses.contains(Status.IN_PROGRESS)) {
-            epicHashMap.get(epicId).setStatus(Status.NEW);
-        } else if (!statuses.contains(Status.NEW) && !statuses.contains(Status.IN_PROGRESS)) {
-            epicHashMap.get(epicId).setStatus(Status.DONE);
-        } else {
+        } else if (statuses.contains(Status.IN_PROGRESS)) {
             epicHashMap.get(epicId).setStatus(Status.IN_PROGRESS);
+        } else if (!statuses.contains(Status.DONE)) {
+            epicHashMap.get(epicId).setStatus(Status.NEW);
+        } else {
+            epicHashMap.get(epicId).setStatus(Status.DONE);
         }
     }
 
@@ -146,11 +158,6 @@ public class TaskManager {
             subtaskHashMap.remove(subtaskId);
         }
         epicHashMap.remove(id);
-    }
-
-    // Получение списка всех подзадач определённого эпика
-    public Set<Integer> getAllSubtaskIdsOfEpic(Epic epic) {
-        return epic.getSubtaskIds();
     }
 
     // Получение списка всех подзадач определённого эпика
