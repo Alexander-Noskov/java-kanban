@@ -1,8 +1,6 @@
 import java.util.Objects;
 
 public class Task {
-    // В ТЗ нет условий по изменениям полей, однако на ревью было сказано, что name можно обновлять
-    // Предполагаю, что description тоже можно обновлять, поэтому добавил сеттеры на оба поля
     private String name;
     private String description;
     private Status status;
