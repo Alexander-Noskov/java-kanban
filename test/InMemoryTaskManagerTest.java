@@ -1,0 +1,145 @@
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class InMemoryTaskManagerTest {
+
+    private TaskManager taskManager;
+    private Task task1;
+    private Task task2;
+    private Subtask subtask1;
+    private Subtask subtask2;
+    private Epic epic1;
+    private Epic epic2;
+    private List<Task> testList;
+
+    @BeforeEach
+    void setUp() {
+        taskManager = Managers.getDefault();
+        testList = new ArrayList<>();
+        task1 = new Task("task1", "task1Disc", Status.IN_PROGRESS, 0);
+        task2 = new Task("task2", "task2Disc", Status.IN_PROGRESS, 0);
+        taskManager.createTask(task1);
+        epic1 = new Epic("epic1", "epic1Disc", 1);
+        epic2 = new Epic("epic2", "epic2Disc", 1);
+        taskManager.createEpic(epic1);
+        subtask1 = new Subtask("subtask1", "subtask1Disc", Status.IN_PROGRESS, 2, epic1);
+        subtask2 = new Subtask("subtask2", "subtask2Disc", Status.IN_PROGRESS, 2, epic1);
+        taskManager.createSubtask(subtask1);
+
+    }
+
+    @Test
+    void getTasks() {
+        testList.add(task1);
+        assertEquals(testList, taskManager.getTasks());
+    }
+
+    @Test
+    void getSubtasks() {
+        testList.add(subtask1);
+        assertEquals(testList, taskManager.getSubtasks());
+    }
+
+    @Test
+    void getEpics() {
+        testList.add(epic1);
+        assertEquals(testList, taskManager.getEpics());
+    }
+
+    @Test
+    void deleteAllTasks() {
+        taskManager.deleteAllTasks();
+        assertEquals(testList, taskManager.getTasks());
+    }
+
+    @Test
+    void deleteAllSubtasks() {
+        taskManager.deleteAllSubtasks();
+        assertEquals(testList, taskManager.getSubtasks());
+    }
+
+    @Test
+    void deleteAllEpics() {
+        taskManager.deleteAllEpics();
+        assertEquals(testList, taskManager.getEpics());
+        assertEquals(testList, taskManager.getSubtasks());
+    }
+
+    @Test
+    void getTask() {
+        assertEquals(task1, taskManager.getTask(0));
+    }
+
+    @Test
+    void getSubtask() {
+        assertEquals(subtask1, taskManager.getSubtask(2));
+    }
+
+    @Test
+    void getEpic() {
+        assertEquals(epic1, taskManager.getEpic(1));
+    }
+
+    @Test
+    void createTask() {
+        assertEquals(Status.NEW, taskManager.getTask(0).getStatus());
+    }
+
+    @Test
+    void createSubtask() {
+        assertEquals(Status.NEW, taskManager.getSubtask(2).getStatus());
+    }
+
+    @Test
+    void createEpic() {
+        assertEquals(Status.NEW, taskManager.getEpic(1).getStatus());
+    }
+
+    @Test
+    void updateTask() {
+        taskManager.updateTask(task2);
+        assertEquals(Status.IN_PROGRESS, taskManager.getTask(0).getStatus());
+    }
+
+    @Test
+    void updateSubtask() {
+        taskManager.updateSubtask(subtask2);
+        assertEquals(Status.IN_PROGRESS, taskManager.getSubtask(2).getStatus());
+        assertEquals(Status.IN_PROGRESS, taskManager.getEpic(1).getStatus());
+    }
+
+    @Test
+    void updateEpic() {
+        subtask2.setStatus(Status.DONE);
+        taskManager.updateSubtask(subtask2);
+        assertEquals(Status.DONE, taskManager.getSubtask(2).getStatus());
+        assertEquals(Status.DONE, taskManager.getEpic(1).getStatus());
+    }
+
+    @Test
+    void deleteTask() {
+        taskManager.deleteTask(0);
+        assertEquals(testList, taskManager.getTasks());
+    }
+
+    @Test
+    void deleteSubtask() {
+        taskManager.deleteSubtask(2);
+        assertEquals(testList, taskManager.getSubtasks());
+        assertEquals(Status.NEW, taskManager.getEpic(1).getStatus());
+    }
+
+    @Test
+    void deleteEpic() {
+        taskManager.deleteEpic(1);
+        assertEquals(testList, taskManager.getSubtasks());
+        assertEquals(testList, taskManager.getEpics());
+    }
+}
