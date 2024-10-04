@@ -2,9 +2,9 @@ import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private int id;
-    private final HashMap<Integer, Task> taskHashMap;
-    private final HashMap<Integer, Subtask> subtaskHashMap;
-    private final HashMap<Integer, Epic> epicHashMap;
+    private final Map<Integer, Task> taskHashMap;
+    private final Map<Integer, Subtask> subtaskHashMap;
+    private final Map<Integer, Epic> epicHashMap;
     private final HistoryManager historyManager;
 
     public InMemoryTaskManager() {
@@ -176,7 +176,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // Получение списка всех подзадач определённого эпика
-    public Set<Integer> getAllSubtaskIdsOfEpic(int epicId) {
+    private Set<Integer> getAllSubtaskIdsOfEpic(int epicId) {
         return epicHashMap.get(epicId).getSubtaskIds();
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 }

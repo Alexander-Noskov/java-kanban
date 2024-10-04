@@ -55,4 +55,7 @@ public interface TaskManager {
 
     // Удаление эпика по идентификатору
     void deleteEpic(int id);
+
+    // Метод получения истории задач
+    List<Task> getHistory();
 }
