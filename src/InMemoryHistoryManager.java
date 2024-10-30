@@ -1,20 +1,24 @@
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private static final List<Task> history = new LinkedList<>();
-    public static final int SIZE_HISTORY = 10;
+private static final Map<Integer, Task> historyMap = new LinkedHashMap<>();
 
     @Override
     public void add(Task task) {
-        if (history.size() == SIZE_HISTORY) {
-            history.removeFirst();
+        int id = task.getId();
+        if (historyMap.containsKey(id)) {
+            remove(id);
         }
-        history.add(task);
+        historyMap.put(id, task);
     }
 
     @Override
     public List<Task> getHistory() {
-        return history;
+        return new ArrayList<>(historyMap.values());
+    }
+
+    @Override
+    public void remove(int id) {
+        historyMap.remove(id);
     }
 }
