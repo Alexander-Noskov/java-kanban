@@ -75,16 +75,19 @@ class InMemoryTaskManagerTest {
     @Test
     void getTask() {
         assertEquals(task1, taskManager.getTask(0));
+        assertTrue(taskManager.getHistory().contains(task1));
     }
 
     @Test
     void getSubtask() {
         assertEquals(subtask1, taskManager.getSubtask(2));
+        assertTrue(taskManager.getHistory().contains(subtask2));
     }
 
     @Test
     void getEpic() {
         assertEquals(epic1, taskManager.getEpic(1));
+        assertTrue(taskManager.getHistory().contains(epic1));
     }
 
     @Test
@@ -127,6 +130,7 @@ class InMemoryTaskManagerTest {
     void deleteTask() {
         taskManager.deleteTask(0);
         assertEquals(testList, taskManager.getTasks());
+        assertFalse(taskManager.getHistory().contains(task1));
     }
 
     @Test
@@ -134,6 +138,7 @@ class InMemoryTaskManagerTest {
         taskManager.deleteSubtask(2);
         assertEquals(testList, taskManager.getSubtasks());
         assertEquals(Status.NEW, taskManager.getEpic(1).getStatus());
+        assertFalse(taskManager.getHistory().contains(subtask1));
     }
 
     @Test
@@ -141,5 +146,8 @@ class InMemoryTaskManagerTest {
         taskManager.deleteEpic(1);
         assertEquals(testList, taskManager.getSubtasks());
         assertEquals(testList, taskManager.getEpics());
+        assertFalse(taskManager.getHistory().contains(epic1));
+        assertFalse(taskManager.getHistory().contains(subtask1));
+        assertFalse(taskManager.getHistory().contains(subtask2));
     }
 }

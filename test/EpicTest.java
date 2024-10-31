@@ -1,6 +1,9 @@
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
@@ -14,16 +17,26 @@ class EpicTest {
     }
 
     @Test
-    public void equalsById() {
+    void addSubtaskId() {
+        epic1.addSubtaskId(2);
+        epic1.addSubtaskId(3);
+        assertEquals(2, epic1.getSubtaskIds().size());
+    }
+
+    @Test
+    void getSubtaskIds() {
+        Set<Integer> subtaskIds = new HashSet<>();
+        subtaskIds.add(2);
+        subtaskIds.add(3);
+        epic1.addSubtaskId(2);
+        epic1.addSubtaskId(3);
+        assertEquals(subtaskIds, epic1.getSubtaskIds());
+    }
+
+    @Test
+    void equalsById() {
         assertEquals(epic1, epic2);
         epic2.setId(2);
         assertNotEquals(epic1, epic2);
     }
-
-    @Test
-    public void unableToAddEpicToEpic() {
-        TaskManager taskManager = Managers.getDefault();
-        taskManager.createEpic(epic1);
-    }
-
 }

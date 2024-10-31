@@ -1,43 +1,38 @@
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InMemoryHistoryManagerTest {
-    HistoryManager historyManager;
+    static HistoryManager historyManager;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         historyManager = Managers.getDefaultHistory();
+
     }
 
     @Test
-    void addAndGetHistory() {
-        List<Task> testList = new LinkedList<>();
-        Task task = new Task("task", "1");
-        testList.add(task);
-        historyManager.add(task);
+    void add() {
+        assertEquals(0, historyManager.getHistory().size());
+        historyManager.add(new Task("task1", "description1"));
+        assertEquals(1, historyManager.getHistory().size());
+    }
+
+    @Test
+    void getHistory() {
+        List<Task> testList = new ArrayList<>();
+        testList.add(new Task("task1", "description1"));
         assertEquals(testList, historyManager.getHistory());
-        Epic epic = new Epic("epic", "2");
-        testList.add(epic);
-        historyManager.add(epic);
+    }
+
+    @Test
+    void remove() {
+        List<Task> testList = new ArrayList<>();
+        historyManager.remove(-1);
         assertEquals(testList, historyManager.getHistory());
-        Subtask subtask = new Subtask("subtask", "3", 1);
-        testList.add(subtask);
-        historyManager.add(subtask);
-        assertEquals(testList,historyManager.getHistory());
-        historyManager.add(task);
-        historyManager.add(task);
-        historyManager.add(task);
-        historyManager.add(task);
-        historyManager.add(task);
-        historyManager.add(task);
-        assertEquals(9, historyManager.getHistory().size());
-        historyManager.add(task);
-        historyManager.add(task);
-        assertEquals(10,historyManager.getHistory().size());
     }
 }
