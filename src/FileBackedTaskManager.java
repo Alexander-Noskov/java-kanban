@@ -1,13 +1,13 @@
 import java.io.*;
 
-public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
+public class FileBackedTaskManager extends InMemoryTaskManager{
     private final File file;
 
     public FileBackedTaskManager(File file) {
         this.file = file;
     }
 
-    public void save() {
+    private void save() {
         StringBuilder resultString = new StringBuilder("id,type,name,status,description,epic" + System.lineSeparator());
         for (Task task : getTasks()) {
             resultString.append(task).append(System.lineSeparator());
@@ -26,7 +26,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    public Task fromString(String value) {
+    private Task fromString(String value) {
         String[] parts = value.split(",");
         int id = Integer.parseInt(parts[0]);
         String name = parts[2];
