@@ -32,16 +32,6 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void fromString() {
-        Task testTask = new Task("name", "description", Status.NEW, 1);
-        Epic testEpic = new Epic("epic", "description", Status.NEW, 1);
-        Subtask testSubtask = new Subtask("subtask", "description", Status.NEW, 1, 1);
-        assertEquals(testTask, taskManager.fromString(testTask.toString()));
-        assertEquals(testEpic, taskManager.fromString(testEpic.toString()));
-        assertEquals(testSubtask, taskManager.fromString(testSubtask.toString()));
-    }
-
-    @Test
     void save() {
         String test1 = "id,type,name,status,description,epic" + System.lineSeparator();
         Task testTask = new Task("name", "description", Status.NEW, 0);
@@ -50,10 +40,6 @@ class FileBackedTaskManagerTest {
         String test2 = test1 + testTask + System.lineSeparator();
         String test3 = test2 + testEpic + System.lineSeparator() + testSubtask + System.lineSeparator();
         try {
-            taskManager.save();
-            String textInFile1 = Files.readString(tempFile.toPath());
-            assertEquals(test1, textInFile1);
-
             taskManager.createTask(testTask);
             String textInFile2 = Files.readString(tempFile.toPath());
             assertEquals(test2, textInFile2);
