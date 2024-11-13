@@ -1,6 +1,6 @@
 import java.io.*;
 
-public class FileBackedTaskManager extends InMemoryTaskManager{
+public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
 
     public FileBackedTaskManager(File file) {
