@@ -15,6 +15,18 @@ public class InMemoryTaskManager implements TaskManager {
         historyManager = Managers.getDefaultHistory();
     }
 
+    protected void loadTask(Task task) {
+        taskHashMap.put(task.getId(), task);
+    }
+
+    protected void loadSubtask(Subtask subtask) {
+        subtaskHashMap.put(subtask.getId(), subtask);
+    }
+
+    protected void loadEpic(Epic epic) {
+        epicHashMap.put(epic.getId(), epic);
+    }
+
     // Получение списка всех задач
     @Override
     public List<Task> getTasks() {
