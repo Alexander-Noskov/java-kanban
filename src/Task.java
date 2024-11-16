@@ -1,3 +1,5 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -5,6 +7,8 @@ public class Task {
     private String description;
     private Status status;
     private int id;
+    private Duration duration;
+    private LocalDateTime startTime;
 
     // Конструктор для создания задачи
     public Task(String name, String description) {
@@ -12,6 +16,7 @@ public class Task {
         this.description = description;
         this.status = Status.NEW;
         this.id = -1;
+        this.duration = Duration.ZERO;
     }
 
     // Конструктор для обновления задачи
@@ -20,6 +25,30 @@ public class Task {
         this.description = description;
         this.status = status;
         this.id = id;
+        this.duration = Duration.ZERO;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime != null) {
+            return startTime.plusMinutes(duration.toMinutes());
+        }
+        return null;
+    }
+
+    public long getDuration() {
+        return duration.toMinutes();
+    }
+
+    public void setDuration(long minutes) {
+        duration = Duration.ofMinutes(minutes);
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public String getName() {
@@ -73,6 +102,13 @@ public class Task {
 
     @Override
     public String toString() {
-        return getId() + "," + getType() + "," + getName() + "," + getStatus() + "," + getDescription();
+        return getId() + "," +
+                getType() + "," +
+                getName() + "," +
+                getStatus() + "," +
+                getDescription() + "," +
+                getStartTime() + "," +
+                getEndTime() + "," +
+                getDuration();
     }
 }

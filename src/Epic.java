@@ -1,8 +1,10 @@
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Epic extends Task {
     private final Set<Integer> subtaskIds = new HashSet<>();
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
@@ -14,6 +16,15 @@ public class Epic extends Task {
 
     public Epic(String name, String description, Status status, int id) {
         super(name, description, status, id);
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public Set<Integer> getSubtaskIds() {
