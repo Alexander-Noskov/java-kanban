@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,8 +34,10 @@ class FileBackedTaskManagerTest {
 
     @Test
     void save() {
-        String test1 = "id,type,name,status,description,epic" + System.lineSeparator();
+        String test1 = "id,type,name,status,description,startTime,endTime,duration,epic" + System.lineSeparator();
         Task testTask = new Task("name", "description", Status.NEW, 0);
+        testTask.setStartTime(LocalDateTime.now());
+        testTask.setDuration(55);
         Epic testEpic = new Epic("epic", "description", Status.NEW, 1);
         Subtask testSubtask = new Subtask("subtask", "description", Status.NEW, 2, 1);
         String test2 = test1 + testTask + System.lineSeparator();
@@ -62,7 +65,7 @@ class FileBackedTaskManagerTest {
     @Test
     void loadFromFile() {
         String sep = System.lineSeparator();
-        StringBuilder resultString = new StringBuilder("id,type,name,status,description,epic" + sep);
+        StringBuilder resultString = new StringBuilder("id,type,name,status,description,startTime,endTime,duration,epic" + sep);
         Task testTask = new Task("name", "description", Status.NEW, 3);
         Epic testEpic = new Epic("epic", "description", Status.NEW, 4);
         Subtask testSubtask = new Subtask("subtask", "description", Status.NEW, 5, 4);

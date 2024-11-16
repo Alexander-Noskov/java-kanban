@@ -2,6 +2,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -10,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
 
-    private TaskManager taskManager;
+    private InMemoryTaskManager taskManager;
     private Task task1;
     private Task task2;
     private Subtask subtask1;
@@ -21,7 +22,7 @@ class InMemoryTaskManagerTest {
 
     @BeforeEach
     void setUp() {
-        taskManager = Managers.getDefault();
+        taskManager = new InMemoryTaskManager();
         testList = new ArrayList<>();
         task1 = new Task("task1", "task1Disc", Status.IN_PROGRESS, 0);
         task2 = new Task("task2", "task2Disc", Status.IN_PROGRESS, 0);
@@ -33,6 +34,34 @@ class InMemoryTaskManagerTest {
         subtask2 = new Subtask("subtask2", "subtask2Disc", Status.IN_PROGRESS, 2, epic1);
         taskManager.createSubtask(subtask1);
 
+    }
+
+    @Test
+    void isValidTime() {
+        assertFalse(taskManager.isValidTime(task1, task2));
+        task1.setStartTime(LocalDateTime.now());
+        task2.setStartTime(LocalDateTime.now().plusMinutes(10));
+        task1.setDuration(5);
+        task2.setDuration(20);
+        assertTrue(taskManager.isValidTime(task1, task2));
+        task1.setDuration(15);
+        assertFalse(taskManager.isValidTime(task1, task2));
+    }
+
+    @Test
+    void addTaskToPrioritizedTask() {
+        task1.setStartTime(LocalDateTime.now());
+        task2.setStartTime(LocalDateTime.now());
+        task1.setDuration(10);
+        task2.setDuration(10);
+
+        taskManager.createTask(task1);
+
+        assertThrows(IllegalArgumentException.class, () -> taskManager.createTask(task2));
+        task2.setStartTime(LocalDateTime.now().plusMinutes(9));
+        assertThrows(IllegalArgumentException.class, () -> taskManager.createTask(task2));
+        task2.setStartTime(LocalDateTime.now().plusMinutes(10));
+        assertDoesNotThrow(() -> taskManager.createTask(task2));
     }
 
     @Test
