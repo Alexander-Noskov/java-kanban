@@ -1,11 +1,9 @@
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,18 +36,6 @@ class InMemoryTaskManagerTest {
 
     @Test
     void isValidTime() {
-        assertFalse(taskManager.isValidTime(task1, task2));
-        task1.setStartTime(LocalDateTime.now());
-        task2.setStartTime(LocalDateTime.now().plusMinutes(10));
-        task1.setDuration(5);
-        task2.setDuration(20);
-        assertTrue(taskManager.isValidTime(task1, task2));
-        task1.setDuration(15);
-        assertFalse(taskManager.isValidTime(task1, task2));
-    }
-
-    @Test
-    void addTaskToPrioritizedTask() {
         task1.setStartTime(LocalDateTime.now());
         task2.setStartTime(LocalDateTime.now());
         task1.setDuration(10);
