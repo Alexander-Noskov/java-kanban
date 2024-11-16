@@ -114,7 +114,7 @@ public class InMemoryTaskManager implements TaskManager {
             if (isValid) {
                 prioritizedTasks.put(task.getStartTime(), task);
             } else {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Время задачи пересекается с существующей");
             }
         }
     }
@@ -167,8 +167,7 @@ public class InMemoryTaskManager implements TaskManager {
         updateEpicTimes(epicId);
     }
 
-    // Метод public, чтобы Runtime можно было проверить валидность времени, до добавления в менеджер
-    public boolean isValidTime(Task task1, Task task2) {
+    private boolean isValidTime(Task task1, Task task2) {
         if (task1.getStartTime() != null && task2.getStartTime() != null) {
             if (task1.getStartTime().isBefore(task2.getStartTime())) {
                 return task1.getEndTime().isBefore(task2.getStartTime());
