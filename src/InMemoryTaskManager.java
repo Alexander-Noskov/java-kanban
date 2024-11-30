@@ -86,6 +86,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask(int id) {
         Task task = taskHashMap.get(id);
+        if (task == null) {
+            throw new NotFoundException("Task with id " + id + " not found");
+        }
         historyManager.add(task);
         return task;
     }
@@ -94,6 +97,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtask(int id) {
         Subtask subtask = subtaskHashMap.get(id);
+        if (subtask == null) {
+            throw new NotFoundException("Subtask with id " + id + " not found");
+        }
         historyManager.add(subtask);
         return subtask;
     }
@@ -102,6 +108,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpic(int id) {
         Epic epic = epicHashMap.get(id);
+        if (epic == null) {
+            throw new NotFoundException("Epic with id " + id + " not found");
+        }
         historyManager.add(epic);
         return epic;
     }
