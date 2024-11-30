@@ -15,7 +15,7 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
-        this.id = -1;
+        this.id = 0;
         this.duration = Duration.ZERO;
     }
 
