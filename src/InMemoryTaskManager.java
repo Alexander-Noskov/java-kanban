@@ -10,7 +10,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final TreeMap<LocalDateTime, Task> prioritizedTasks;
 
     public InMemoryTaskManager() {
-        id = 0;
+        id = 1;
         taskHashMap = new HashMap<>();
         subtaskHashMap = new HashMap<>();
         epicHashMap = new HashMap<>();
@@ -124,8 +124,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void createTask(Task task) {
         task.setId(id);
         task.setStatus(Status.NEW);
-        taskHashMap.put(id, task);
         addTaskToPrioritizedTask(task);
+        taskHashMap.put(id, task);
         id++;
     }
 
@@ -134,11 +134,11 @@ public class InMemoryTaskManager implements TaskManager {
     public void createSubtask(Subtask subtask) {
         subtask.setId(id);
         subtask.setStatus(Status.NEW);
+        addTaskToPrioritizedTask(subtask);
         subtaskHashMap.put(id, subtask);
         // Передать id подзадачи в эпик
         epicHashMap.get(subtask.getEpicId()).addSubtaskId(id);
         updateEpicTimes(subtask.getEpicId());
-        addTaskToPrioritizedTask(subtask);
         id++;
     }
 
