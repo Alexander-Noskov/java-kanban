@@ -30,6 +30,7 @@ public class InMemoryTaskManager implements TaskManager {
         epicHashMap.put(epic.getId(), epic);
     }
 
+    @Override
     public List<Task> getPrioritizedTasks() {
         return new ArrayList<>(prioritizedTasks.values());
     }
@@ -122,32 +123,42 @@ public class InMemoryTaskManager implements TaskManager {
     // Создание задачи. Сам объект должен передаваться в качестве параметра.
     @Override
     public void createTask(Task task) {
-        task.setId(id);
-        task.setStatus(Status.NEW);
-        addTaskToPrioritizedTask(task);
-        taskHashMap.put(id, task);
+        Task newTask = new Task(task.getName(), task.getDescription());
+        newTask.setId(id);
+        newTask.setStatus(Status.NEW);
+        newTask.setStartTime(task.getStartTime());
+        newTask.setDuration(task.getDuration());
+        addTaskToPrioritizedTask(newTask);
+        taskHashMap.put(id, newTask);
         id++;
     }
 
     // Создание подзадачи. Сам объект должен передаваться в качестве параметра.
     @Override
     public void createSubtask(Subtask subtask) {
-        subtask.setId(id);
-        subtask.setStatus(Status.NEW);
-        addTaskToPrioritizedTask(subtask);
-        subtaskHashMap.put(id, subtask);
+        if (subtask.getEpicId() == 0) {
+            throw new NotFoundException("Epic not found");
+        }
+        Subtask newSubtask = new Subtask(subtask.getName(), subtask.getDescription(), subtask.getEpicId());
+        newSubtask.setId(id);
+        newSubtask.setStatus(Status.NEW);
+        newSubtask.setStartTime(subtask.getStartTime());
+        newSubtask.setDuration(subtask.getDuration());
+        addTaskToPrioritizedTask(newSubtask);
+        subtaskHashMap.put(id, newSubtask);
         // Передать id подзадачи в эпик
-        epicHashMap.get(subtask.getEpicId()).addSubtaskId(id);
-        updateEpicTimes(subtask.getEpicId());
+        epicHashMap.get(newSubtask.getEpicId()).addSubtaskId(id);
+        updateEpicTimes(newSubtask.getEpicId());
         id++;
     }
 
     // Создание эпика. Сам объект должен передаваться в качестве параметра.
     @Override
     public void createEpic(Epic epic) {
-        epic.setId(id);
-        epic.setStatus(Status.NEW);
-        epicHashMap.put(id, epic);
+        Epic newEpic = new Epic(epic.getName(), epic.getDescription());
+        newEpic.setId(id);
+        newEpic.setStatus(Status.NEW);
+        epicHashMap.put(id, newEpic);
         id++;
     }
 
