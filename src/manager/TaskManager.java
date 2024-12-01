@@ -1,3 +1,9 @@
+package manager;
+
+import entity.Epic;
+import entity.Subtask;
+import entity.Task;
+
 import java.util.List;
 
 public interface TaskManager {
@@ -58,4 +64,6 @@ public interface TaskManager {
 
     // Метод получения истории задач
     List<Task> getHistory();
+
+    List<Task> getPrioritizedTasks();
 }

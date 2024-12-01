@@ -1,3 +1,6 @@
+package manager;
+
+import entity.Task;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

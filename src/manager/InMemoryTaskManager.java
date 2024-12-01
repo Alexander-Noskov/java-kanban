@@ -1,3 +1,11 @@
+package manager;
+
+import entity.Epic;
+import entity.Status;
+import entity.Subtask;
+import entity.Task;
+import exception.NotFoundException;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -10,7 +18,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final TreeMap<LocalDateTime, Task> prioritizedTasks;
 
     public InMemoryTaskManager() {
-        id = 0;
+        id = 1;
         taskHashMap = new HashMap<>();
         subtaskHashMap = new HashMap<>();
         epicHashMap = new HashMap<>();
@@ -30,6 +38,7 @@ public class InMemoryTaskManager implements TaskManager {
         epicHashMap.put(epic.getId(), epic);
     }
 
+    @Override
     public List<Task> getPrioritizedTasks() {
         return new ArrayList<>(prioritizedTasks.values());
     }
@@ -85,6 +94,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask(int id) {
         Task task = taskHashMap.get(id);
+        if (task == null) {
+            throw new NotFoundException("entity.Task with id " + id + " not found");
+        }
         historyManager.add(task);
         return task;
     }
@@ -93,6 +105,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtask(int id) {
         Subtask subtask = subtaskHashMap.get(id);
+        if (subtask == null) {
+            throw new NotFoundException("entity.Subtask with id " + id + " not found");
+        }
         historyManager.add(subtask);
         return subtask;
     }
@@ -101,6 +116,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpic(int id) {
         Epic epic = epicHashMap.get(id);
+        if (epic == null) {
+            throw new NotFoundException("entity.Epic with id " + id + " not found");
+        }
         historyManager.add(epic);
         return epic;
     }
@@ -122,32 +140,42 @@ public class InMemoryTaskManager implements TaskManager {
     // Создание задачи. Сам объект должен передаваться в качестве параметра.
     @Override
     public void createTask(Task task) {
-        task.setId(id);
-        task.setStatus(Status.NEW);
-        taskHashMap.put(id, task);
-        addTaskToPrioritizedTask(task);
+        Task newTask = new Task(task.getName(), task.getDescription());
+        newTask.setId(id);
+        newTask.setStatus(Status.NEW);
+        newTask.setStartTime(task.getStartTime());
+        newTask.setDuration(task.getDuration());
+        addTaskToPrioritizedTask(newTask);
+        taskHashMap.put(id, newTask);
         id++;
     }
 
     // Создание подзадачи. Сам объект должен передаваться в качестве параметра.
     @Override
     public void createSubtask(Subtask subtask) {
-        subtask.setId(id);
-        subtask.setStatus(Status.NEW);
-        subtaskHashMap.put(id, subtask);
+        if (subtask.getEpicId() == 0) {
+            throw new NotFoundException("entity.Epic not found");
+        }
+        Subtask newSubtask = new Subtask(subtask.getName(), subtask.getDescription(), subtask.getEpicId());
+        newSubtask.setId(id);
+        newSubtask.setStatus(Status.NEW);
+        newSubtask.setStartTime(subtask.getStartTime());
+        newSubtask.setDuration(subtask.getDuration());
+        addTaskToPrioritizedTask(newSubtask);
+        subtaskHashMap.put(id, newSubtask);
         // Передать id подзадачи в эпик
-        epicHashMap.get(subtask.getEpicId()).addSubtaskId(id);
-        updateEpicTimes(subtask.getEpicId());
-        addTaskToPrioritizedTask(subtask);
+        epicHashMap.get(newSubtask.getEpicId()).addSubtaskId(id);
+        updateEpicTimes(newSubtask.getEpicId());
         id++;
     }
 
     // Создание эпика. Сам объект должен передаваться в качестве параметра.
     @Override
     public void createEpic(Epic epic) {
-        epic.setId(id);
-        epic.setStatus(Status.NEW);
-        epicHashMap.put(id, epic);
+        Epic newEpic = new Epic(epic.getName(), epic.getDescription());
+        newEpic.setId(id);
+        newEpic.setStatus(Status.NEW);
+        epicHashMap.put(id, newEpic);
         id++;
     }
 

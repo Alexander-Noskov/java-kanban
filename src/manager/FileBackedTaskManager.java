@@ -1,3 +1,9 @@
+package manager;
+
+import entity.*;
+import exception.ManagerLoadException;
+import exception.ManagerSaveException;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -41,20 +47,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         long duration = Long.parseLong(parts[7]);
         switch (TaskTypes.valueOf(parts[1])) {
-            case TASK -> {
+            case TaskTypes.TASK -> {
                 Task task = new Task(name, description, status, id);
                 task.setStartTime(startTime);
                 task.setDuration(duration);
                 return task;
             }
-            case SUBTASK -> {
+            case TaskTypes.SUBTASK -> {
                 int epicId = Integer.parseInt(parts[8]);
                 Subtask subtask = new Subtask(name, description, status, id, epicId);
                 subtask.setStartTime(startTime);
                 subtask.setDuration(duration);
                 return subtask;
             }
-            case EPIC -> {
+            case TaskTypes.EPIC -> {
                 Epic epic = new Epic(name, description, status, id);
                 epic.setStartTime(startTime);
                 epic.setEndTime(endTime);

@@ -1,3 +1,9 @@
+package manager;
+
+import entity.Epic;
+import entity.Status;
+import entity.Subtask;
+import entity.Task;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -35,11 +41,11 @@ class FileBackedTaskManagerTest {
     @Test
     void save() {
         String test1 = "id,type,name,status,description,startTime,endTime,duration,epic" + System.lineSeparator();
-        Task testTask = new Task("name", "description", Status.NEW, 0);
+        Task testTask = new Task("name", "description", Status.NEW, 1);
         testTask.setStartTime(LocalDateTime.now());
         testTask.setDuration(55);
-        Epic testEpic = new Epic("epic", "description", Status.NEW, 1);
-        Subtask testSubtask = new Subtask("subtask", "description", Status.NEW, 2, 1);
+        Epic testEpic = new Epic("epic", "description", Status.NEW, 2);
+        Subtask testSubtask = new Subtask("subtask", "description", Status.NEW, 3, 2);
         String test2 = test1 + testTask + System.lineSeparator();
         String test3 = test2 + testEpic + System.lineSeparator() + testSubtask + System.lineSeparator();
         try {
@@ -66,9 +72,9 @@ class FileBackedTaskManagerTest {
     void loadFromFile() {
         String sep = System.lineSeparator();
         StringBuilder resultString = new StringBuilder("id,type,name,status,description,startTime,endTime,duration,epic" + sep);
-        Task testTask = new Task("name", "description", Status.NEW, 3);
-        Epic testEpic = new Epic("epic", "description", Status.NEW, 4);
-        Subtask testSubtask = new Subtask("subtask", "description", Status.NEW, 5, 4);
+        Task testTask = new Task("name", "description", Status.NEW, 4);
+        Epic testEpic = new Epic("epic", "description", Status.NEW, 5);
+        Subtask testSubtask = new Subtask("subtask", "description", Status.NEW, 6, 5);
         resultString.append(testTask).append(sep).append(testEpic).append(sep).append(testSubtask).append(sep);
         try (Writer writer = new FileWriter(tempFile)) {
             writer.write(resultString.toString());
