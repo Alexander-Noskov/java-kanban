@@ -1,4 +1,4 @@
-package http;
+package http.handler;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -6,17 +6,17 @@ import manager.TaskManager;
 
 import java.io.IOException;
 
-public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
+public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
 
-    public PrioritizedHandler(TaskManager taskManager) {
+    public HistoryHandler(TaskManager taskManager) {
         super(taskManager);
     }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        if (exchange.getRequestURI().getPath().equals("/prioritized")) {
+        if (exchange.getRequestURI().getPath().equals("/history")) {
             if (exchange.getRequestMethod().equals("GET")) {
-                String response = gson.toJson(manager.getPrioritizedTasks());
+                String response = gson.toJson(manager.getHistory());
                 sendText(exchange, response, 200);
             }
         }

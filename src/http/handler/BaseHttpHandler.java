@@ -1,7 +1,8 @@
-package http;
+package http.handler;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import http.HttpTaskServer;
 import manager.TaskManager;
 
 import java.io.BufferedReader;
